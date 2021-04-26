@@ -1,8 +1,8 @@
 from typing import List
 
 from engine.rules import Rules
-from .card import Card
-from .player import Player
+from models.card import Card
+from engine.player import Player
 
 
 class Human(Player):

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from engine.rules import Rules
-from .card import Card
+from models.card import Card
 
 
 class Player(ABC):

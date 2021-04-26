@@ -3,7 +3,7 @@ from typing import List
 from engine.rules import Rules
 from engine.score import Score
 from models.card import Card
-from models.player import Player
+from engine.player import Player
 
 
 class Scorer:

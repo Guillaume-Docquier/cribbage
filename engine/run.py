@@ -1,4 +1,4 @@
-from models.player import Player
+from engine.player import Player
 from .rules import Rules
 from .scorer import Scorer
 from typing import Callable

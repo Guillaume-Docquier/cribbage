@@ -35,7 +35,7 @@ class Score:
 
     @staticmethod
     def pairs(cards, starter=None):
-        cards = cards + [starter] if starter else []
+        cards = cards + ([starter] if starter else [])
 
         card_numbers = defaultdict(int)
         for card in cards:

@@ -3,7 +3,7 @@ from typing import List, Deque
 from collections import deque
 from models.card import Card
 from models.deck import Deck
-from models.player import Player
+from engine.player import Player
 from .run import Run
 from .scorer import Scorer
 

@@ -1,5 +1,5 @@
 from engine.game import Game
-from models.human import Human
+from players.human import Human
 
 if __name__ == "__main__":
     players = [
