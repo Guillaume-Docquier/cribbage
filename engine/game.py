@@ -83,7 +83,7 @@ class Game:
 
     def __reveal_starter(self):
         print(f"\nRevealing starter...")
-        self.deck.score_his_heels()
+        self.deck.cut()
         self.starter = self.deck.draw()
         Scorer.score_his_heels(self.players[-1], self.starter)
         print(f"Starter: {self.starter}")
