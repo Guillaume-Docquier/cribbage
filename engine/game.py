@@ -64,7 +64,7 @@ class Game:
 
     def __deal(self):
         print(f"\nDealing cards...")
-        self.deck = Deck()
+        self.deck = Deck.build_full_deck()
         self.deck.shuffle()
         self.crib = []
 

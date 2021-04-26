@@ -4,11 +4,17 @@ import random
 
 
 class Deck:
-    def __init__(self):
-        self.cards = []
+    def __init__(self, cards=None):
+        self.cards = cards if cards else []
+
+    @staticmethod
+    def build_full_deck():
+        cards = []
         for number in range(Card.MIN, Card.MAX + 1):
             for color in Color.tolist():
-                self.cards.append(Card(number, color))
+                cards.append(Card(number, color))
+
+        return Deck(cards)
 
     def shuffle(self):
         random.shuffle(self.cards)
