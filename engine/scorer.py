@@ -8,7 +8,7 @@ from engine.player import Player
 
 class Scorer:
     SCORING_METHODS = [
-        # TODO His heels
+        ("starter jack", Score.starter_jack),
         ("fifteens", Score.fifteens),
         ("pairs", Score.pairs),
         ("sequences", Score.sequences),
@@ -16,7 +16,13 @@ class Scorer:
     ]
 
     @staticmethod
-    def last_to_play(player: Player, running_count: int):
+    def score_his_heels(player: Player, starter: Card):
+        if starter.number == 11:
+            print(f"{player.name} was the dealer, revealed a jack and scores {Score.HIS_HEELS}!")
+            player.score += Score.HIS_HEELS
+
+    @staticmethod
+    def score_last_to_play(player: Player, running_count: int):
         print(f"{player.name} was last to play and pegs {Score.LAST_TO_PLAY}!")
         player.score += Score.LAST_TO_PLAY
         if running_count == Rules.MAX_RUNNING_COUNT:

@@ -37,7 +37,7 @@ class Run:
                 self.__remove_player(player)
                 print(f"\n{player.name} says Go!")
 
-        Scorer.last_to_play(self.last_played, running_count)
+        Scorer.score_last_to_play(self.last_played, running_count)
 
     def is_over(self):
         return self.cards_played == self.nb_cards_to_play

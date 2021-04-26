@@ -9,10 +9,21 @@ class Score:
     LAST_TO_PLAY = 1
     MAX_RUNNING_COUNT = 1
 
+    HIS_HEELS = 2
+    STARTER_JACK = 1
     FIFTEEN = 2
     PAIR = 2
     SEQUENCE = 1
     FLUSH = 1
+
+    @staticmethod
+    def starter_jack(cards, starter=None):
+        if starter:
+            starter_jack = Card(11, starter.color)
+            if starter_jack in cards:
+                return Score.STARTER_JACK
+
+        return 0
 
     @staticmethod
     def fifteens(cards, starter=None):
