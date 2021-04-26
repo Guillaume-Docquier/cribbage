@@ -1,10 +1,10 @@
 from models.player import Player
+from .rules import Rules
 from .scorer import Scorer
+from typing import Callable
 
 
 class Run:
-    MAX_RUNNING_COUNT = 31
-
     def __init__(self, players, nb_cards_to_play):
         self.players = players
         self.players_playing = players.copy()
@@ -14,32 +14,30 @@ class Run:
         self.current_turn = 0
         self.last_played: Player or None = None
 
-    def start(self, game_is_over):
+    def start(self, is_game_over: Callable[[], bool]):
         self.__initialize_turn()
 
         running_count = 0
-        while len(self.players_playing) > 0 and running_count < self.MAX_RUNNING_COUNT:
+        cards_in_the_run = []
+        while len(self.players_playing) > 0 and running_count < Rules.MAX_RUNNING_COUNT and not is_game_over():
             player = self.players_playing[self.current_turn]
             print(f"\nCount is {running_count}, {player.name} to play")
             card_played = player.play(running_count)
             if card_played:
+                cards_in_the_run.append(card_played)
                 self.last_played = player
                 self.cards_played += 1
-                running_count += min(10, card_played.number)
+                running_count += Rules.get_card_value(card_played)
+
                 print(f"\n{player.name} played {card_played}!")
-                # TODO Score points
-                if game_is_over():
-                    return
+                Scorer.score_run(player, cards_in_the_run, running_count)
 
                 self.__increment_turn()
             else:
                 self.__remove_player(player)
                 print(f"\n{player.name} says Go!")
 
-        if len(self.players_playing) == 0:
-            Scorer.go(self.last_played)
-        else:
-            Scorer.run(self.last_played)
+        Scorer.last_to_play(self.last_played, running_count)
 
     def is_over(self):
         return self.cards_played == self.nb_cards_to_play

@@ -5,6 +5,7 @@ from models.card import Card
 from models.deck import Deck
 from models.player import Player
 from .run import Run
+from .scorer import Scorer
 
 
 class Game:
@@ -28,7 +29,7 @@ class Game:
         self.winning_score = self.SHORT_WINNING_SCORE if short_game else self.DEFAULT_WINNING_SCORE
 
         print(f"\nStarting game with players {players} with winning score {self.winning_score}")
-        while not self.__game_is_over():
+        while not self.__is_game_over():
             print(f"\nNew round!")
             self.__change_dealer()
             self.__deal()
@@ -37,11 +38,13 @@ class Game:
             self.__play()
             self.__score_hands()
 
-    def __game_is_over(self):
+        print(f"\nGame is over! {self.winner.name} won the game with {self.winner.score} points")
+        self.__show_players()
+
+    def __is_game_over(self):
         for player in self.players:
             if player.score >= self.winning_score:
-                print(f"\nGame is over! {player.name} won the game with {player.score} points")
-                print(f"Players: {list(self.players)}")
+                self.winner = player
                 return True
 
         return False
@@ -71,13 +74,13 @@ class Game:
             for player in self.players:
                 player.deal(self.deck.draw())
 
-        for i in range(nb_cards_in_play - nb_cards_to_deal):
+        for i in range(nb_cards_in_play - nb_cards_to_deal * len(self.players)):
             self.crib.append(self.deck.draw())
 
     def __build_crib(self):
         print(f"\nBuilding the crib...")
         for player in self.players:
-            nb_cards_to_discard = len(player.cards) - self.PLAYING_MAX_HAND_SIZE
+            nb_cards_to_discard = len(player.hand) - self.PLAYING_MAX_HAND_SIZE
             print()
             self.crib.extend(player.discard(nb_cards_to_discard))
 
@@ -91,17 +94,26 @@ class Game:
         print(f"\nLet's play!")
         cards_to_play = len(self.players) * self.PLAYING_MAX_HAND_SIZE
         run = Run(list(self.players), cards_to_play)
-        while not self.__game_is_over() and not run.is_over():
+        while not self.__is_game_over() and not run.is_over():
             print(f"\nNew run!")
             self.__show_players()
-            run.start(self.__game_is_over)
+            run.start(self.__is_game_over)
 
     def __score_hands(self):
         print(f"\nScoring hands...")
-        # TODO
+        for player in self.players:
+            if self.__is_game_over():
+                return
+
+            print()
+            Scorer.score_hand(player, player.initial_hand, self.starter)
+            if player.has_crib:
+                print(f"\nScoring crib for {player.name}")
+                Scorer.score_hand(player, self.crib, self.starter)
+
         self.__show_players()
 
     def __show_players(self):
         print(f"Players are:")
         for player in self.players:
-            print(f"\t{player.name} ({len(player.cards)} cards): {player.score} points")
+            print(f"\t{player.name} ({len(player.hand)} cards): {player.score} points")
