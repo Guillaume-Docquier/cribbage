@@ -32,7 +32,7 @@ class Player(ABC):
         self.hand.append(card)
 
     def discard(self, count) -> List[Card]:
-        discarded = self.do_discard(count)
+        discarded = self.do_discard(self.hand.copy(), count)
         for discard in discarded:
             self.initial_hand.remove(discard)
             self.hand.remove(discard)
@@ -40,21 +40,25 @@ class Player(ABC):
         return discarded
 
     @abstractmethod
-    def do_discard(self, count) -> List[Card]:
+    def do_discard(self, cards, count) -> List[Card]:
         pass
 
     def play(self, run, current_count) -> Card or None:
-        if len(self.hand) == 0 or current_count + min([Rules.get_card_value(card) for card in self.hand]) > Rules.MAX_RUNNING_COUNT:
+        playable_cards = self.get_playable_cards(current_count)
+        if len(playable_cards) == 0:
             return self.go()
 
-        played = self.do_play(run, current_count)
+        played = self.do_play(playable_cards, run, current_count)
         self.hand.remove(played)
 
         return played
 
     @abstractmethod
-    def do_play(self, run, current_count) -> Card:
+    def do_play(self, cards, run, current_count) -> Card:
         pass
+
+    def get_playable_cards(self, current_count) -> List[Card]:
+        return [card for card in self.hand if Rules.get_card_value(card) + current_count <= Rules.MAX_RUNNING_COUNT]
 
     def go(self) -> None:
         self.say("No cards to play, go!")

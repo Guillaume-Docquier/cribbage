@@ -12,13 +12,15 @@ from players.card_statistics import CardStatistics
 class Computer(Player):
     def __init__(self, name):
         super().__init__(f"Computer-{name}")
+        self.card_statistics = None
 
-    def do_discard(self, count) -> List[Card]:
+    def do_discard(self, cards, count) -> List[Card]:
         deck = Deck.build_full_deck()
-        deck.remove_cards(self.hand)
+        deck.remove_cards(cards)
+        self.card_statistics = CardStatistics(Deck.build_full_deck())
 
-        card_statistics = CardStatistics(deck)
-        possible_hands = combinations(self.hand, Rules.PLAYING_MAX_HAND_SIZE)
+        possible_hands = combinations(cards, Rules.PLAYING_MAX_HAND_SIZE)
+
         best_possible_hand = None
         best_possible_potential = 0
         for possible_hand in possible_hands:
@@ -26,7 +28,7 @@ class Computer(Player):
             for starter in deck.cards:
                 dummy = Computer("Dummy")
                 Scorer.score_hand(dummy, list(possible_hand), starter, verbose=False)
-                probability = card_statistics.probability_of_card(starter)
+                probability = self.card_statistics.probability_of_card(starter)
                 potential += dummy.score * probability
                 # TODO Consider points given to the crib
 
@@ -34,10 +36,10 @@ class Computer(Player):
                 best_possible_hand = possible_hand
                 best_possible_potential = potential
 
-        self.say(f"Hand {best_possible_hand} has the best potential of {best_possible_potential} points")
+        self.say(f"Hand {best_possible_hand} has the best potential of {best_possible_potential:.3f} points")
 
         discarded = []
-        for card in self.hand:
+        for card in cards:
             if card not in best_possible_hand:
                 discarded.append(card)
 
@@ -45,16 +47,18 @@ class Computer(Player):
 
         return discarded
 
-    def do_play(self, run, current_count) -> Card or None:
+    def do_play(self, cards, run, current_count) -> Card or None:
         self.say(f"Run is {run}")
         self.say(f"Count is {current_count}")
-        self.__show_hand()
+        self.__show_playable_cards(cards)
+
+        self.card_statistics.remove_cards(cards)
+        self.card_statistics.remove_cards(run)
 
         best_score = -1
         best_card = None
         # TODO Compute best card if equivalent. Biggest for now
-        # TODO Consider that some cards cannot be played
-        for card in sorted(self.hand, reverse=True):
+        for card in sorted(cards, reverse=True):
             dummy = Computer("Dummy")
             Scorer.score_run(dummy, run + [card], current_count + Rules.get_card_value(card), verbose=False)
             if dummy.score > best_score:
@@ -63,7 +67,7 @@ class Computer(Player):
 
         return best_card
 
-    def __show_hand(self):
-        self.say(f"Current hand")
-        for index, card in enumerate(self.hand):
+    def __show_playable_cards(self, cards):
+        self.say(f"Cards available")
+        for index, card in enumerate(cards):
             self.say(f"\t{card}")
