@@ -26,7 +26,8 @@ class Human(Player):
             except ValueError:
                 self.__invalid_choice()
 
-    def do_play(self, current_count) -> Card or None:
+    def do_play(self, run, current_count) -> Card or None:
+        self.say(f"Run is {run}")
         self.say(f"Count is {current_count}")
         self.__show_hand()
 

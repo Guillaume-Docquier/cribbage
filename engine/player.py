@@ -43,17 +43,17 @@ class Player(ABC):
     def do_discard(self, count) -> List[Card]:
         pass
 
-    def play(self, current_count) -> Card or None:
+    def play(self, run, current_count) -> Card or None:
         if len(self.hand) == 0 or current_count + min([Rules.get_card_value(card) for card in self.hand]) > Rules.MAX_RUNNING_COUNT:
             return self.go()
 
-        played = self.do_play(current_count)
+        played = self.do_play(run, current_count)
         self.hand.remove(played)
 
         return played
 
     @abstractmethod
-    def do_play(self, current_count) -> Card:
+    def do_play(self, run, current_count) -> Card:
         pass
 
     def go(self) -> None:

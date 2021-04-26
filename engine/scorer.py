@@ -8,6 +8,7 @@ from engine.player import Player
 
 class Scorer:
     SCORING_METHODS = [
+        # TODO His heels
         ("fifteens", Score.fifteens),
         ("pairs", Score.pairs),
         ("sequences", Score.sequences),
@@ -23,11 +24,12 @@ class Scorer:
             player.score += Score.MAX_RUNNING_COUNT
 
     @staticmethod
-    def score_run(player: Player, run: List[Card], running_count: int):
+    def score_run(player: Player, run: List[Card], running_count: int, verbose=True):
         fifteen_score = 0
         if running_count == 15:
             fifteen_score = Score.FIFTEEN
-            print(f"{player.name} scored {fifteen_score} for hitting 15!")
+            if verbose:
+                print(f"{player.name} scored {fifteen_score} for hitting 15!")
 
         pairs_score = 0
         max_pairs_sequence_length = min(4, len(run))
@@ -36,7 +38,8 @@ class Scorer:
             card_variety = len(set([card.number for card in cards_considered]))
             if card_variety == 1:
                 pairs_score = Score.pairs(cards_considered)
-                print(f"{player.name} scored {pairs_score} for pairs!")
+                if verbose:
+                    print(f"{player.name} scored {pairs_score} for pairs!")
                 break
 
         sequence_score = 0
@@ -45,7 +48,8 @@ class Scorer:
             cards_considered = run[-count:]
             if Rules.is_sequence(cards_considered):
                 sequence_score = len(cards_considered) * Score.SEQUENCE
-                print(f"{player.name} scored {sequence_score} for sequence!")
+                if verbose:
+                    print(f"{player.name} scored {sequence_score} for sequence!")
                 break
 
         player.score += (fifteen_score + pairs_score + sequence_score)

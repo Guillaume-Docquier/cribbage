@@ -22,7 +22,7 @@ class Run:
         while len(self.players_playing) > 0 and running_count < Rules.MAX_RUNNING_COUNT and not is_game_over():
             player = self.players_playing[self.current_turn]
             print(f"\nCount is {running_count}, {player.name} to play")
-            card_played = player.play(running_count)
+            card_played = player.play(cards_in_the_run, running_count)
             if card_played:
                 cards_in_the_run.append(card_played)
                 self.last_played = player

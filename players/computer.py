@@ -10,6 +10,9 @@ from players.card_statistics import CardStatistics
 
 
 class Computer(Player):
+    def __init__(self, name):
+        super().__init__(f"Computer-{name}")
+
     def do_discard(self, count) -> List[Card]:
         deck = Deck.build_full_deck()
         deck.remove_cards(self.hand)
@@ -42,32 +45,25 @@ class Computer(Player):
 
         return discarded
 
-    # TODO Auto-play
-    def do_play(self, current_count) -> Card or None:
+    def do_play(self, run, current_count) -> Card or None:
+        self.say(f"Run is {run}")
         self.say(f"Count is {current_count}")
         self.__show_hand()
 
-        while True:
-            self.say(f"Choose a card to play by entering its index (0 to {len(self.hand) - 1})")
-            try:
-                choice = int(input())
-                if choice < len(self.hand):
-                    card_played = self.hand[int(choice)]
-                    self.say(f"Played {card_played}")
+        best_score = -1
+        best_card = None
+        # TODO Compute best card if equivalent. Biggest for now
+        # TODO Consider that some cards cannot be played
+        for card in sorted(self.hand, reverse=True):
+            dummy = Computer("Dummy")
+            Scorer.score_run(dummy, run + [card], current_count + Rules.get_card_value(card), verbose=False)
+            if dummy.score > best_score:
+                best_score = dummy.score
+                best_card = card
 
-                    if Rules.get_card_value(card_played) + current_count <= Rules.MAX_RUNNING_COUNT:
-                        return card_played
-                    else:
-                        self.__invalid_choice()
-                else:
-                    self.__invalid_choice()
-            except ValueError:
-                self.__invalid_choice()
+        return best_card
 
     def __show_hand(self):
         self.say(f"Current hand")
         for index, card in enumerate(self.hand):
-            self.say(f"\t{index} -> {card}")
-
-    def __invalid_choice(self):
-        self.say(f"Invalid choice")
+            self.say(f"\t{card}")
