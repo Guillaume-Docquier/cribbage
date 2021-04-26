@@ -11,9 +11,7 @@ class Deck:
                 self.cards.append(Card(number, color))
 
     def shuffle(self):
-        for i in range(len(self.cards) - 1, 0, -1):
-            j = random.randint(0, i + 1)
-            self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
+        random.shuffle(self.cards)
 
     def draw(self):
         if len(self.cards) > 0:
