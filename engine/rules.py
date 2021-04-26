@@ -4,6 +4,9 @@ from models.card import Card
 
 
 class Rules:
+    PLAYING_MAX_HAND_SIZE = 4
+    DEFAULT_WINNING_SCORE = 161
+    SHORT_WINNING_SCORE = 61
     MAX_RUNNING_COUNT = 31
 
     MIN_SEQUENCE_LENGTH = 3

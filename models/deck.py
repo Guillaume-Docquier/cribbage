@@ -1,3 +1,5 @@
+from typing import List
+
 from .card import Card
 from .color import Color
 import random
@@ -29,6 +31,13 @@ class Deck:
         if len(self.cards) > 0:
             pivot = random.randint(1, len(self.cards) - 2)
             self.cards = self.cards[pivot:] + self.cards[:pivot]
+
+    def remove_cards(self, cards: List[Card]):
+        for card in cards:
+            if card not in self.cards:
+                stop = 0
+
+            self.cards.remove(card)
 
     def print(self):
         for card in self.cards:

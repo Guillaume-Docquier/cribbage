@@ -51,14 +51,17 @@ class Scorer:
         player.score += (fifteen_score + pairs_score + sequence_score)
 
     @staticmethod
-    def score_hand(player: Player, hand: List[Card], starter: Card):
-        print(f"Scoring for {player.name}")
-        print(f"Starter is {starter}")
-        print(f"Hand is")
-        for index, card in enumerate(hand):
-            print(f"\t{card}")
+    def score_hand(player: Player, hand: List[Card], starter: Card, verbose=True):
+        if verbose:
+            print(f"Scoring for {player.name}")
+            print(f"Starter is {starter}")
+            print(f"Hand is")
+            for index, card in enumerate(hand):
+                print(f"\t{card}")
 
         for scoring_name, scoring_func in Scorer.SCORING_METHODS:
             score = scoring_func(hand, starter)
-            print(f"{player.name} scored {score} for {scoring_name}")
+            if verbose:
+                print(f"{player.name} scored {score} for {scoring_name}")
+
             player.score += score

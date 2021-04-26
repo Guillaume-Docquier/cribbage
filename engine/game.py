@@ -4,19 +4,16 @@ from collections import deque
 from models.card import Card
 from models.deck import Deck
 from engine.player import Player
+from .rules import Rules
 from .run import Run
 from .scorer import Scorer
 
 
 class Game:
-    PLAYING_MAX_HAND_SIZE = 4
-    DEFAULT_WINNING_SCORE = 161
-    SHORT_WINNING_SCORE = 61
-
     def __init__(self):
         self.players: Deque[Player] = deque()
 
-        self.winning_score: int = self.DEFAULT_WINNING_SCORE
+        self.winning_score: int = Rules.DEFAULT_WINNING_SCORE
         self.deck: Deck or None = None
         self.crib: List[Card] = []
         self.starter: Card or None = None
@@ -26,7 +23,7 @@ class Game:
         random.shuffle(players)
         self.players = deque(players, maxlen=len(players))
 
-        self.winning_score = self.SHORT_WINNING_SCORE if short_game else self.DEFAULT_WINNING_SCORE
+        self.winning_score = Rules.SHORT_WINNING_SCORE if short_game else Rules.DEFAULT_WINNING_SCORE
 
         print(f"\nStarting game with players {players} with winning score {self.winning_score}")
         while not self.__is_game_over():
@@ -68,7 +65,7 @@ class Game:
         self.deck.shuffle()
         self.crib = []
 
-        nb_cards_in_play = self.PLAYING_MAX_HAND_SIZE * (len(self.players) + 1)
+        nb_cards_in_play = Rules.PLAYING_MAX_HAND_SIZE * (len(self.players) + 1)
         nb_cards_to_deal = nb_cards_in_play // len(self.players)
         for i in range(nb_cards_to_deal):
             for player in self.players:
@@ -80,7 +77,7 @@ class Game:
     def __build_crib(self):
         print(f"\nBuilding the crib...")
         for player in self.players:
-            nb_cards_to_discard = len(player.hand) - self.PLAYING_MAX_HAND_SIZE
+            nb_cards_to_discard = len(player.hand) - Rules.PLAYING_MAX_HAND_SIZE
             print()
             self.crib.extend(player.discard(nb_cards_to_discard))
 
@@ -92,7 +89,7 @@ class Game:
 
     def __play(self):
         print(f"\nLet's play!")
-        cards_to_play = len(self.players) * self.PLAYING_MAX_HAND_SIZE
+        cards_to_play = len(self.players) * Rules.PLAYING_MAX_HAND_SIZE
         run = Run(list(self.players), cards_to_play)
         while not self.__is_game_over() and not run.is_over():
             print(f"\nNew run!")
