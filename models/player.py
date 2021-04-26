@@ -37,6 +37,9 @@ class Player(ABC):
         pass
 
     def play(self, current_count) -> Card or None:
+        if len(self.cards) == 0 or current_count + min([min(10, card.number) for card in self.cards]) > 31:  # TODO card value and 31
+            return self.go()
+
         played = self.do_play(current_count)
         if played:
             self.cards.remove(played)
@@ -47,6 +50,9 @@ class Player(ABC):
     def do_play(self, current_count) -> Card or None:
         pass
 
-    def score(self, starter):
-        # TODO
-        pass
+    def go(self):
+        self.say("No cards to play, go!")
+        return None
+
+    def say(self, what):
+        print(f"[{self.name}] {what}")

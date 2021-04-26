@@ -4,6 +4,7 @@ from collections import deque
 from models.card import Card
 from models.deck import Deck
 from models.player import Player
+from .run import Run
 
 
 class Game:
@@ -88,44 +89,19 @@ class Game:
 
     def __play(self):
         print(f"\nLet's play!")
-        self.__show_scores()
         cards_to_play = len(self.players) * self.PLAYING_MAX_HAND_SIZE
-        cards_played = 0
-        current_turn = 0
-        go_count = 0
-        last_played: Player or None = None
-        while cards_played < cards_to_play:
-            running_count = 0
-            if go_count == len(self.players):
-                print(f"{last_played.name} pegs 1!")
-                go_count = 0
-                last_played = None
-
-            while go_count != len(self.players):
-                player = self.players[current_turn]
-                print(f"\nCount is {running_count}, {player.name} to play")
-                card_played = player.play(running_count)
-                if card_played:
-                    go_count = 0
-                    last_played = player
-                    cards_played += 1
-                    running_count += min(10, card_played.number)
-                    # TODO Score points
-                    print(f"\n{player.name} played {card_played}!")
-                    if self.__game_is_over():
-                        return
-                else:
-                    go_count += 1
-                    print(f"\n{player.name} says Go!")
-
-                current_turn = (current_turn + 1) % len(self.players)
+        run = Run(list(self.players), cards_to_play)
+        while not self.__game_is_over() and not run.is_over():
+            print(f"\nNew run!")
+            self.__show_players()
+            run.start(self.__game_is_over)
 
     def __score_hands(self):
         print(f"\nScoring hands...")
         # TODO
-        self.__show_scores()
+        self.__show_players()
 
-    def __show_scores(self):
-        print(f"Scores are:")
+    def __show_players(self):
+        print(f"Players are:")
         for player in self.players:
-            print(f"\t{player.name}: {player.score} points")
+            print(f"\t{player.name} ({len(player.cards)} cards): {player.score} points")
