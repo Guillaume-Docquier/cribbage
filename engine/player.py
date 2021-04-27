@@ -15,6 +15,7 @@ class Player(ABC):
         self.initial_hand = []
         self.hand = []
         self.score = 0
+        self.expected_score = None
 
     def __repr__(self):
         return f"{self.name}.{self.score}.{self.hand}"

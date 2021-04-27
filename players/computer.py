@@ -37,6 +37,7 @@ class Computer(Player):
                 best_possible_potential = potential
 
         self.say(f"Hand {best_possible_hand} has the best potential of {best_possible_potential:.3f} points")
+        self.expected_score = best_possible_potential
 
         discarded = []
         for card in cards:

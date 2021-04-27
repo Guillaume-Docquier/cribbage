@@ -69,9 +69,15 @@ class Scorer:
             for index, card in enumerate(hand):
                 print(f"\t{card}")
 
+        total_score = 0
         for scoring_name, scoring_func in Scorer.SCORING_METHODS:
             score = scoring_func(hand, starter)
             if verbose:
                 print(f"{player.name} scored {score} for {scoring_name}")
 
-            player.score += score
+            total_score += score
+
+        if verbose:
+            print(f"{player.name} scored a total of {total_score} points (expected {player.expected_score})")
+
+        player.score += total_score
