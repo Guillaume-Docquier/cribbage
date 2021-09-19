@@ -32,13 +32,15 @@ class Deck:
             pivot = random.randint(1, len(self.cards) - 2)
             self.cards = self.cards[pivot:] + self.cards[:pivot]
 
-    def remove_cards(self, cards: List[Card]):
-        for card in cards:
-            if card not in self.cards:
-                stop = 0
+    def append_cards(self, cards: List[Card]):
+        self.cards.append(cards)
 
-            self.cards.remove(card)
+    def remove_cards(self, cards: List[Card]):
+        self.cards = [card for card in self.cards if card not in cards]
 
     def print(self):
         for card in self.cards:
             print(card)
+
+    def copy(self):
+        return Deck(self.cards)
