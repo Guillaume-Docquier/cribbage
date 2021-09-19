@@ -10,14 +10,14 @@ if __name__ == "__main__":
 
     crib_player = Computer("crib")
 
-    player.deal(Card(1, Color.HEARTS))
-    player.deal(Card(3, Color.SPADES))
-    player.deal(Card(4, Color.SPADES))
-    player.deal(Card(13, Color.SPADES))
-    player.deal(Card(9, Color.HEARTS))
-    player.deal(Card(10, Color.HEARTS))
+    player.deal(Card(2, Color.HEARTS))
+    player.deal(Card(6, Color.HEARTS))
+    player.deal(Card(6, Color.SPADES))
+    player.deal(Card(8, Color.DIAMONDS))
+    player.deal(Card(10, Color.SPADES))
+    player.deal(Card(11, Color.DIAMONDS))
 
-    starter = Card(12, Color.CLUBS)
+    starter = Card(2, Color.DIAMONDS)
 
     discarded = player.discard(2)
 

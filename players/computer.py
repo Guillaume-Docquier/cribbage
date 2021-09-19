@@ -42,6 +42,9 @@ class Computer(Player):
         potentials.sort(key=lambda x: x[1] + x[2], reverse=True)
 
         self.say(f"Cards: {cards}")
+        self.say(f"The crib is {'mine' if self.has_crib else 'theirs'}")
+        self.say("")
+
         self.say("Top 5 hands:")
         for (hand, score, crib_score) in potentials[:5]:
             self.say(f"\t{hand}: {score + crib_score:.3f} points ({score:.3f} hand, {crib_score:.3f} crib)")
